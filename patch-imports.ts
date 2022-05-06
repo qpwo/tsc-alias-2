@@ -4,7 +4,13 @@ import {
     AliasResolver,
     resolveAliases,
 } from '@digitak/grubber/library/utilities/resolveAliases'
-import { readdirSync, readFileSync, statSync, writeFileSync } from 'fs'
+import {
+    readdirSync,
+    readFileSync,
+    renameSync,
+    statSync,
+    writeFileSync,
+} from 'fs'
 import { createRequire } from 'module'
 import { relative, resolve as resolvePath } from 'path'
 
@@ -36,7 +42,8 @@ function replaceStart(x: string, old: string, newStart: string) {
 //     }))
 // )
 
-console.log({ outDir, aliases })
+// console.log({ outDir, aliases })
+renameExt(outDir, '.js', '.mjs')
 myPatcher(outDir, aliases)
 
 function myPatcher(directory: string, aliases: AliasResolver[]) {
@@ -68,10 +75,31 @@ function getImportPath(
     directory: string,
     imported: string
 ) {
-    console.log({ arguments })
+    // console.log({ arguments })
     let path = resolveAliases(imported, aliases) ?? imported
-    path = resolveImport(path, directory)
+    try {
+        path = resolveImport(path, directory)
+    } catch {}
+    try {
+        path = resolveImport(path + '.mjs', directory)
+    } catch {}
     path = relative(directory, path)
     if (path[0] != '.' && path[0] != '/') path = './' + path
     return path
+}
+
+/** Recursively renames all files from one extension to another */
+function renameExt(directory: string, oldExt: string, newExt: string) {
+    directory = resolvePath(directory)
+    for (const element of readdirSync(directory)) {
+        const entity = `${directory}/${element}`
+        if (statSync(entity).isDirectory()) {
+            renameExt(entity, oldExt, newExt)
+            continue
+        }
+        if (entity.endsWith(oldExt)) {
+            const newPath = entity.slice(0, -oldExt.length) + newExt
+            renameSync(entity, newPath)
+        }
+    }
 }
