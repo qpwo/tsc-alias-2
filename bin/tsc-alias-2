@@ -1,0 +1,4 @@
+#!/usr/bin/env node
+const ta2 = require('../tsc-alias-2.cjs')
+
+ta2.main()

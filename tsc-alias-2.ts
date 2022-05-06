@@ -1,9 +1,6 @@
 // import patchJsImports from '@digitak/grubber/library/utilities/patchJsImports'
 import addJsExtensions from '@digitak/grubber/library/utilities/addJsExtensions'
-import {
-    AliasResolver,
-    resolveAliases,
-} from '@digitak/grubber/library/utilities/resolveAliases'
+import { resolveAliases } from '@digitak/grubber/library/utilities/resolveAliases'
 import {
     readdirSync,
     readFileSync,
@@ -14,6 +11,11 @@ import {
 import { createRequire } from 'module'
 import { relative, resolve as resolvePath } from 'path'
 import { parse as parseJsonc } from 'jsonc-simple-parser'
+
+interface AliasResolver {
+    find: RegExp
+    replacement: string | null
+}
 
 const require = createRequire(process.cwd())
 const resolveImport = (dependency: string, directory: string) =>
@@ -26,7 +28,11 @@ export function main() {
     const aliases = Object.entries(tsconfig.compilerOptions.paths).map(
         ([pattern, replacements]) => ({
             find: new RegExp(pattern),
-            replacement: replaceStart(replacements[0] as string, rootDir, './'),
+            replacement: replaceStart(
+                (replacements as string[])[0],
+                rootDir,
+                './'
+            ),
         })
     )
 
