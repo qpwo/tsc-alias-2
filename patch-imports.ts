@@ -75,14 +75,26 @@ function getImportPath(
     directory: string,
     imported: string
 ) {
-    // console.log({ arguments })
     let path = resolveAliases(imported, aliases) ?? imported
+    let resolved = false
     try {
-        path = resolveImport(path, directory)
+        if (!resolved) {
+            path = resolveImport(path + '.mjs', directory)
+            resolved = true
+        }
     } catch {}
     try {
-        path = resolveImport(path + '.mjs', directory)
+        if (!resolved) {
+            path = resolveImport(path, directory)
+            resolved = true
+        }
     } catch {}
+    if (!resolved) {
+        console.error(
+            `ERROR: could not resolve import '${imported}' from within dir '${directory}'`
+        )
+    }
+    path = resolvePath(path)
     path = relative(directory, path)
     if (path[0] != '.' && path[0] != '/') path = './' + path
     return path
