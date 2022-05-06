@@ -1,4 +1,4 @@
 #!/usr/bin/env node
-const ta2 = require('../tsc-alias-2.cjs')
+const ta2 = require('../dist/tsc-alias-2.js')
 
 ta2.main()

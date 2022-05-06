@@ -1,26 +1,54 @@
 {
-    "files": [
-        "README.md",
-        "LICENSE",
-        "package.json",
-        "tsc-alias-2.ts",
-        "tsc-alias-2.cjs",
-        "tsc-alias-2.cjs.map"
-    ],
-    "types": "dist/tsc-alias-2.d.ts",
-    "main": "dist/tsc-alias-2.cjs",
-    "bin": {
-        "tsc-alias-2": "./bin/tsc-alias-2"
-    },
-    "scripts": {
-        "dist": "rm -rf dist && tsc && npm run build",
-        "build": "esbuild --bundle --minify --tree-shaking --platform=node tsc-alias-2.ts --outfile=dist/tsc-alias-2.cjs --sourcemap"
-    },
-    "devDependencies": {
-        "@digitak/grubber": "^3.1.1",
-        "jsonc-simple-parser": "^2.2.1",
-        "@types/node": "^17.0.31",
-        "esbuild": "^0.14.38",
-        "typescript": "^4.6.4"
-    }
+  "name": "tsc-alias-2",
+  "version": "1.0.3",
+  "description": "Alias tsc's output, including file extensions and node_modules aliasing! You can run your code directly in node or the browser with NO BUNDLING!",
+  "main": "dist/tsc-alias-2.js",
+  "directories": {
+    "example": "example"
+  },
+  "files": [
+    "README.md",
+    "package.json",
+    "tsc-alias-2.ts",
+    "tsc-alias-2.js",
+    "tsc-alias-2.js.map"
+  ],
+  "bin": {
+    "tsc-alias-2": "./bin/tsc-alias-2"
+  },
+  "scripts": {
+    "dist": "rm -rf dist && tsc && npm run build",
+    "build": "esbuild --bundle --minify --tree-shaking --platform=node tsc-alias-2.ts --outfile=dist/tsc-alias-2.js --sourcemap"
+  },
+  "devDependencies": {
+    "@digitak/grubber": "^3.1.1",
+    "jsonc-simple-parser": "^2.2.1",
+    "@types/node": "^17.0.31",
+    "esbuild": "^0.14.38",
+    "typescript": "^4.6.4"
+  },
+  "dependencies": {
+    "esbuild": "^0.14.38",
+    "jsonc-simple-parser": "^2.2.1",
+    "typescript": "^4.6.4"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/qpwo/tsc-alias-2.git"
+  },
+  "keywords": [
+    "typescript",
+    "alias",
+    "build",
+    "bundle",
+    "import",
+    "extensions"
+  ],
+  "author": "Luke Harold Miles",
+  "license": "ISC",
+  "types": "./dist/tsc-alias-2.d.ts",
+  "bugs": {
+    "url": "https://github.com/qpwo/tsc-alias-2/issues"
+  },
+  "homepage": "https://github.com/qpwo/tsc-alias-2#readme"
 }
