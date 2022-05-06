@@ -19,40 +19,27 @@ const require = createRequire(process.cwd())
 const resolveImport = (dependency: string, directory: string) =>
     require.resolve(dependency, { paths: [directory] })
 
-const tsconfig = parseJsonc(readFileSync('tsconfig.json').toString())
-const rootDir = tsconfig.compilerOptions.rootDir
-const outDir = tsconfig.compilerOptions.outDir
-const aliases = Object.entries(tsconfig.compilerOptions.paths).map(
-    ([pattern, replacements]) => ({
-        find: new RegExp(pattern),
-        replacement: replaceStart(replacements[0] as string, rootDir, './'),
-    })
-)
+export function main() {
+    const tsconfig = parseJsonc(readFileSync('tsconfig.json').toString())
+    const rootDir = tsconfig.compilerOptions.rootDir
+    const outDir = tsconfig.compilerOptions.outDir
+    const aliases = Object.entries(tsconfig.compilerOptions.paths).map(
+        ([pattern, replacements]) => ({
+            find: new RegExp(pattern),
+            replacement: replaceStart(replacements[0] as string, rootDir, './'),
+        })
+    )
 
-function replaceStart(x: string, old: string, newStart: string) {
-    return x.startsWith(old) ? newStart + x.slice(old.length) : x
+    renameExt(outDir, '.js', '.mjs')
+    replaceAllImports(outDir, aliases)
 }
 
-// const package_ = JSON.parse(readFileSync('package.json').toString())
-// const deps = Object.keys(package_.dependencies)
-
-// aliases.push(
-//     ...deps.map(dep => ({
-//         find: new RegExp(dep),
-//         replacement: './node_modules/' + dep,
-//     }))
-// )
-
-// console.log({ outDir, aliases })
-renameExt(outDir, '.js', '.mjs')
-myPatcher(outDir, aliases)
-
-function myPatcher(directory: string, aliases: AliasResolver[]) {
+export function replaceAllImports(directory: string, aliases: AliasResolver[]) {
     directory = resolvePath(directory)
     for (const element of readdirSync(directory)) {
         const entity = `${directory}/${element}`
         if (statSync(entity).isDirectory()) {
-            myPatcher(entity, aliases)
+            replaceAllImports(entity, aliases)
             continue
         }
         // only patch .js, .cjs and .mjs files
@@ -65,12 +52,7 @@ function myPatcher(directory: string, aliases: AliasResolver[]) {
     }
 }
 
-function updateFile(path: string, updater: (content: string) => string): void {
-    const content = readFileSync(path).toString()
-    const updatedContent = updater(content)
-    writeFileSync(path, updatedContent)
-}
-
+/** Finds the correct relative import to the actual target js file */
 function getImportPath(
     aliases: AliasResolver[],
     directory: string,
@@ -115,4 +97,16 @@ function renameExt(directory: string, oldExt: string, newExt: string) {
             renameSync(entity, newPath)
         }
     }
+}
+
+/** Overwrite a file in-place */
+function updateFile(path: string, updater: (content: string) => string): void {
+    const content = readFileSync(path).toString()
+    const updatedContent = updater(content)
+    writeFileSync(path, updatedContent)
+}
+
+/** Replace the start of a string */
+function replaceStart(x: string, old: string, newStart: string) {
+    return x.startsWith(old) ? newStart + x.slice(old.length) : x
 }
