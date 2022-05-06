@@ -17,6 +17,10 @@
             ]
         }
     },
+    "tsc-alias": {
+        "verbose": false,
+        "resolveFullPaths": true,
+    },
     "include": [
         "src/**/*"
     ],

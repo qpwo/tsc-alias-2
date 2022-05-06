@@ -13,12 +13,13 @@ import {
 } from 'fs'
 import { createRequire } from 'module'
 import { relative, resolve as resolvePath } from 'path'
+import { parse as parseJsonc } from 'jsonc-simple-parser'
 
 const require = createRequire(process.cwd())
 const resolveImport = (dependency: string, directory: string) =>
     require.resolve(dependency, { paths: [directory] })
 
-const tsconfig = JSON.parse(readFileSync('tsconfig.json').toString())
+const tsconfig = parseJsonc(readFileSync('tsconfig.json').toString())
 const rootDir = tsconfig.compilerOptions.rootDir
 const outDir = tsconfig.compilerOptions.outDir
 const aliases = Object.entries(tsconfig.compilerOptions.paths).map(

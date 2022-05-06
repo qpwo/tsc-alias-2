@@ -1,23 +1,22 @@
 {
+    "files": [
+        "README.md",
+        "LICENSE",
+        "package.json",
+        "patch-imports.ts",
+        "patch-imports.js",
+        "patch-imports.js.map"
+    ],
     "scripts": {
-        "build": "tsc",
-        "useless": "tsc-alias && tsc-esm",
-        "test": "esbuild --bundle  --platform=node patch-imports.ts | node",
-        "test2": "esbuild --bundle  --platform=node patch-imports.ts --outfile=patch-imports.js --sourcemap && node --enable-source-maps patch-imports.js",
-        "fullthing": "rm -rf dist && tsc && npm run test2 && node dist/index.mjs"
+        "build": "esbuild --bundle --minify --tree-shaking --platform=node patch-imports.ts --outfile=patch-imports.js --sourcemap"
     },
     "dependencies": {
-        "@digitak/grubber": "^3.1.1"
+        "@digitak/grubber": "^3.1.1",
+        "jsonc-simple-parser": "^2.2.1"
     },
     "devDependencies": {
-        "@types/lodash-es": "^4.17.6",
         "@types/node": "^17.0.31",
         "esbuild": "^0.14.38",
-        "lodash-es": "^4.17.21",
         "typescript": "^4.6.4"
-    },
-    "formerDependencies": {
-        "tsc-alias": "^1.6.7",
-        "@digitak/tsc-esm": "^3.1.2"
     }
 }

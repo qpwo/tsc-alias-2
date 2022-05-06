@@ -1,5 +1,4 @@
 .vscode
-/dist
 patch-imports.js
 patch-imports.js.map
 pnpm-lock.yaml
