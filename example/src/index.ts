@@ -1,7 +1,9 @@
 import { bar } from './a'
-
+import { sum } from 'lodash-es'
 import { y } from '@b'
 
-console.log({ bar: bar(), y })
+const n = sum([10, 11, 12])
 
-export { y, bar }
+console.log(n)
+
+export { y, bar, n }
