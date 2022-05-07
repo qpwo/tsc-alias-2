@@ -24,6 +24,10 @@ You probably want `outDir` and `rootDir` in your `tsconfig.json`:
 
 Then just run `tsc && tsc-alias-2` instead of your build step. It will map paths specified in the tsconfig as well.
 
+### Demo
+
+https://user-images.githubusercontent.com/10591373/167230591-19d79a82-1ac8-4af4-9027-b5c0885f20c6.mp4
+
 ### Using the result
 
 For the browser, put this in your `index.html`:
